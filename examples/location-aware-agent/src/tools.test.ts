@@ -134,7 +134,7 @@ describe("Agent Tools", () => {
 
       expect(mockMapInstance.showDirections).toHaveBeenCalledWith([
         { lat: 40.7128, lng: -74.006, floorId: "floor-1" },
-        200,
+        { poiId: 200 },
       ]);
       expect(result).toEqual(mockDirections);
     });
@@ -146,9 +146,9 @@ describe("Agent Tools", () => {
 
       expect(mockMapInstance.showDirections).toHaveBeenCalledWith([
         { lat: 40.7128, lng: -74.006, floorId: "floor-1" },
-        100,
-        200,
-        300,
+        { poiId: 100 },
+        { poiId: 200 },
+        { poiId: 300 },
       ]);
     });
 

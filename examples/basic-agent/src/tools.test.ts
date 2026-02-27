@@ -126,7 +126,10 @@ describe("Agent Tools", () => {
 
       const result = await showDirections.action({ waypoints: [100, 200] });
 
-      expect(mockMapInstance.showDirections).toHaveBeenCalledWith([100, 200]);
+      expect(mockMapInstance.showDirections).toHaveBeenCalledWith([
+        { poiId: 100 },
+        { poiId: 200 },
+      ]);
       expect(result).toEqual(mockDirections);
     });
 
@@ -136,7 +139,9 @@ describe("Agent Tools", () => {
       await showDirections.action({ waypoints: [100, 200, 300] });
 
       expect(mockMapInstance.showDirections).toHaveBeenCalledWith([
-        100, 200, 300,
+        { poiId: 100 },
+        { poiId: 200 },
+        { poiId: 300 },
       ]);
     });
 
