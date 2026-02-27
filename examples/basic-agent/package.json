@@ -16,15 +16,15 @@
     "@core/gemini": "workspace:*",
     "@core/logger": "workspace:*",
     "@core/wayfinder": "workspace:*",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "typebox": "^1.0.78"
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "typebox": "^1.1.5"
   },
   "devDependencies": {
-    "@types/react": "^19.2.5",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
+    "@vitejs/plugin-react": "^5.1.4",
     "typescript": "~5.9.3",
-    "vite": "npm:rolldown-vite@7.2.5"
+    "vite": "^7.3.1"
   }
 }

@@ -11,6 +11,6 @@
   "dependencies": {
     "fuse.js": "^7.1.0",
     "locusmaps-sdk": "^1.1.2",
-    "typebox": "^1.0.78"
+    "typebox": "^1.1.5"
   }
 }

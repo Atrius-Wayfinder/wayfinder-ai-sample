@@ -11,6 +11,6 @@
   "dependencies": {
     "@core/agent": "workspace:*",
     "@core/wayfinder": "workspace:*",
-    "typebox": "^1.0.78"
+    "typebox": "^1.1.5"
   }
 }
