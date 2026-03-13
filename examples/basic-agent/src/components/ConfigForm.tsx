@@ -98,7 +98,7 @@ export function ConfigForm({
               type="text"
               value={accountId}
               onChange={(e) => setAccountId(e.target.value)}
-              placeholder="e.g. A18L64IIIUQX7L"
+              placeholder="e.g. A73K92RMPWFN4J"
               className={errors.accountId ? styles.inputError : ""}
             />
             {errors.accountId && (
