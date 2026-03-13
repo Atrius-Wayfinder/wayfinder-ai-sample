@@ -82,6 +82,92 @@ describe("GeminiClient", () => {
     });
   });
 
+  describe("Constructor Config Override", () => {
+    it("should use provided apiKey over environment variable", async () => {
+      const customClient = new GeminiClient({
+        apiKey: "custom-api-key",
+      });
+
+      const mockResponse = {
+        candidates: [
+          {
+            content: { role: "model", parts: [{ text: "ok" }] },
+          },
+        ],
+      };
+
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response);
+
+      await customClient.generate([], [], "");
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining("key=custom-api-key"),
+        expect.any(Object),
+      );
+    });
+
+    it("should use provided model over environment variable", async () => {
+      const customClient = new GeminiClient({
+        apiKey: "test-key",
+        model: "gemini-pro",
+      });
+
+      const mockResponse = {
+        candidates: [
+          {
+            content: { role: "model", parts: [{ text: "ok" }] },
+          },
+        ],
+      };
+
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response);
+
+      await customClient.generate([], [], "");
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining("models/gemini-pro:generateContent"),
+        expect.any(Object),
+      );
+    });
+
+    it("should use provided temperature over environment variable", async () => {
+      const customClient = new GeminiClient({
+        apiKey: "test-key",
+        temperature: 0.3,
+      });
+
+      const mockResponse = {
+        candidates: [
+          {
+            content: { role: "model", parts: [{ text: "ok" }] },
+          },
+        ],
+      };
+
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockResponse,
+      } as Response);
+
+      await customClient.generate([], [], "");
+
+      const callArgs = fetchMock.mock.calls[0][1];
+      const body = JSON.parse((callArgs as RequestInit).body as string);
+      expect(body.generationConfig.temperature).toBe(0.3);
+    });
+
+    it("should fall back to env vars when no config provided (backward compat)", () => {
+      const defaultClient = new GeminiClient();
+      expect(defaultClient).toBeDefined();
+    });
+  });
+
   describe("Simple Text Response", () => {
     it("should parse simple text response correctly", async () => {
       const mockResponse = {

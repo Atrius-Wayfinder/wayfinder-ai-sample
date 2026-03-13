@@ -12,21 +12,38 @@ import { GeminiClient } from "@core/gemini";
 import tools from "@core/agent-tools";
 import { search, showDirections } from "../tools";
 import { buildSystemInstruction, MAX_ITERATIONS } from "../prompts";
+import type { AppConfig } from "../config";
 import styles from "./ChatDrawer.module.css";
 
-// Initialize the agent once with full configuration
-const agentConfig: AgentConfig = {
-  client: new GeminiClient(),
-  tools: [search, showDirections, ...tools],
-  buildSystemInstruction,
-  maxIterations: MAX_ITERATIONS,
-};
-const agent = new Agent(agentConfig);
+interface ChatDrawerProps {
+  config: AppConfig;
+  onOpenSettings: () => void;
+}
 
-export function ChatDrawer() {
+/**
+ * Create the Agent from runtime config.
+ * Called once when the component first mounts with a valid config.
+ */
+function createAgent(config: AppConfig): Agent {
+  const agentConfig: AgentConfig = {
+    client: new GeminiClient({
+      apiKey: config.apiKey,
+      model: config.model,
+      temperature: config.temperature,
+    }),
+    tools: [search, showDirections, ...tools],
+    buildSystemInstruction: (iteration: number) =>
+      buildSystemInstruction(iteration, config.venueId),
+    maxIterations: MAX_ITERATIONS,
+  };
+  return new Agent(agentConfig);
+}
+
+export function ChatDrawer({ config, onOpenSettings }: ChatDrawerProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const agentRef = useRef<Agent>(createAgent(config));
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -46,7 +63,7 @@ export function ChatDrawer() {
 
     try {
       // Call the AI agent
-      const result = await agent.chat(content);
+      const result = await agentRef.current.chat(content);
 
       const assistantMessage: Message = {
         id: result.message.id,
@@ -86,8 +103,32 @@ export function ChatDrawer() {
   return (
     <div className={styles.chatDrawer}>
       <div className={styles.chatHeader}>
-        <h2>Venue Assistant</h2>
-        <p>Ask me about locations, directions, and amenities</p>
+        <div className={styles.chatHeaderContent}>
+          <div>
+            <h2>Venue Assistant</h2>
+            <p>Ask me about locations, directions, and amenities</p>
+          </div>
+          <button
+            className={styles.settingsButton}
+            onClick={onOpenSettings}
+            title="Settings"
+            aria-label="Open settings"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div className={styles.chatMessages}>

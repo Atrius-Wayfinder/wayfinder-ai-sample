@@ -90,6 +90,18 @@ interface GeminiGenerateRequest {
   };
 }
 
+/**
+ * Optional configuration for GeminiClient.
+ * When provided, these values take precedence over environment variables.
+ * This enables runtime configuration (e.g., from localStorage or a config form)
+ * without requiring a rebuild.
+ */
+export interface GeminiClientConfig {
+  apiKey?: string;
+  model?: string;
+  temperature?: number;
+}
+
 // ============================================================================
 // Gemini Client Class
 // ============================================================================
@@ -99,18 +111,23 @@ export class GeminiClient implements IAIClient {
   private model: string;
   private temperature: number;
 
-  constructor() {
+  constructor(config?: GeminiClientConfig) {
     this.apiKey =
-      (import.meta.env.VITE_AI_CLIENT_API_KEY as string | undefined) ?? "";
+      config?.apiKey ??
+      (import.meta.env.VITE_AI_CLIENT_API_KEY as string | undefined) ??
+      "";
     this.model =
+      config?.model ??
       (import.meta.env.VITE_AI_CLIENT_MODEL as string | undefined) ??
       DEFAULT_MODEL;
     this.temperature =
-      parseFloat(import.meta.env.VITE_AI_CLIENT_TEMPERATURE as string) ?? 0.7;
+      config?.temperature ??
+      parseFloat(import.meta.env.VITE_AI_CLIENT_TEMPERATURE as string) ??
+      0.7;
 
     if (!this.apiKey) {
       console.warn(
-        "AI client API key not configured. Set VITE_AI_CLIENT_API_KEY in your .env file.",
+        "AI client API key not configured. Set VITE_AI_CLIENT_API_KEY in your .env file or pass { apiKey } to the GeminiClient constructor.",
       );
     }
   }
