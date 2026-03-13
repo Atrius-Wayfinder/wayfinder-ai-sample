@@ -28,7 +28,7 @@ describe("GeminiClient", () => {
   beforeEach(() => {
     // Setup environment variables
     vi.stubEnv("VITE_AI_CLIENT_API_KEY", "test-api-key");
-    vi.stubEnv("VITE_AI_CLIENT_MODEL", "gemini-2.0-flash");
+    vi.stubEnv("VITE_AI_CLIENT_MODEL", "gemini-2.5-flash");
     vi.stubEnv("VITE_AI_CLIENT_TEMPERATURE", "0.7");
 
     // Mock fetch globally
@@ -71,7 +71,7 @@ describe("GeminiClient", () => {
         meta: {
           env: {
             VITE_AI_CLIENT_API_KEY: "test-key",
-            VITE_AI_CLIENT_MODEL: "gemini-2.0-flash",
+            VITE_AI_CLIENT_MODEL: "gemini-2.5-flash",
             VITE_AI_CLIENT_TEMPERATURE: undefined,
           },
         },
@@ -191,9 +191,9 @@ describe("GeminiClient", () => {
         json: async () => mockResponse,
       } as Response);
 
-       const messages: Message[] = [
-         { role: "user", type: "user_input", content: "Where is the bathroom?" },
-       ];
+      const messages: Message[] = [
+        { role: "user", type: "user_input", content: "Where is the bathroom?" },
+      ];
 
       const response = await client.generate(messages, [], "You are helpful");
 
@@ -482,10 +482,10 @@ describe("GeminiClient", () => {
         json: async () => mockResponse,
       } as Response);
 
-       const messages: Message[] = [
-         { role: "user", type: "user_input", content: "Hello" },
-         { role: "assistant", type: "assistant_response", content: "Hi there" },
-       ];
+      const messages: Message[] = [
+        { role: "user", type: "user_input", content: "Hello" },
+        { role: "assistant", type: "assistant_response", content: "Hi there" },
+      ];
 
       await client.generate(messages, [], "");
 
@@ -511,9 +511,9 @@ describe("GeminiClient", () => {
         json: async () => mockResponse,
       } as Response);
 
-       const messages: Message[] = [
-         { role: "user", type: "user_input", content: "What time is it?" },
-       ];
+      const messages: Message[] = [
+        { role: "user", type: "user_input", content: "What time is it?" },
+      ];
 
       await client.generate(messages, [], "");
 
@@ -538,13 +538,11 @@ describe("GeminiClient", () => {
         json: async () => mockResponse,
       } as Response);
 
-       const toolCallMessage: Message = {
-         role: "assistant",
-         type: "tool_calls",
-         content: [
-           { name: "search", args: { query: "test" } },
-         ],
-       };
+      const toolCallMessage: Message = {
+        role: "assistant",
+        type: "tool_calls",
+        content: [{ name: "search", args: { query: "test" } }],
+      };
 
       await client.generate([toolCallMessage], [], "");
 
@@ -573,16 +571,16 @@ describe("GeminiClient", () => {
         json: async () => mockResponse,
       } as Response);
 
-       const toolResultMessage: Message = {
-         role: "user",
-         type: "tool_results",
-         content: [
-           {
-             name: "search",
-             result: [{ id: 1, name: "Bathroom" }],
-           },
-         ],
-       };
+      const toolResultMessage: Message = {
+        role: "user",
+        type: "tool_results",
+        content: [
+          {
+            name: "search",
+            result: [{ id: 1, name: "Bathroom" }],
+          },
+        ],
+      };
 
       await client.generate([toolResultMessage], [], "");
 
@@ -613,17 +611,17 @@ describe("GeminiClient", () => {
         json: async () => mockResponse,
       } as Response);
 
-       const toolResultMessage: Message = {
-         role: "user",
-         type: "tool_results",
-         content: [
-           {
-             name: "search",
-             result: null,
-             error: "Connection timeout",
-           },
-         ],
-       };
+      const toolResultMessage: Message = {
+        role: "user",
+        type: "tool_results",
+        content: [
+          {
+            name: "search",
+            result: null,
+            error: "Connection timeout",
+          },
+        ],
+      };
 
       await client.generate([toolResultMessage], [], "");
 
@@ -654,15 +652,15 @@ describe("GeminiClient", () => {
         json: async () => mockResponse,
       } as Response);
 
-       const invalidMessage: Message = {
-         role: "user",
-         type: "user_input",
-         content: "{invalid json",
-       };
+      const invalidMessage: Message = {
+        role: "user",
+        type: "user_input",
+        content: "{invalid json",
+      };
 
       // Should not throw, should treat as plain text
       await expect(
-        client.generate([invalidMessage], [], "")
+        client.generate([invalidMessage], [], ""),
       ).resolves.not.toThrow();
     });
   });
@@ -775,7 +773,9 @@ describe("GeminiClient", () => {
     it("should handle network errors", async () => {
       fetchMock.mockRejectedValueOnce(new Error("Network error"));
 
-      await expect(client.generate([], [], "")).rejects.toThrow("Network error");
+      await expect(client.generate([], [], "")).rejects.toThrow(
+        "Network error",
+      );
     });
 
     it("should handle JSON parsing errors", async () => {
@@ -805,14 +805,14 @@ describe("GeminiClient", () => {
         json: async () => mockResponse,
       } as Response);
 
-       const messages: Message[] = [
-         { role: "user", type: "user_input", content: "Find bathrooms" },
-         {
-           role: "assistant",
-           type: "tool_calls",
-           content: [{ name: "search", args: { query: "bathroom" } }],
-         },
-       ];
+      const messages: Message[] = [
+        { role: "user", type: "user_input", content: "Find bathrooms" },
+        {
+          role: "assistant",
+          type: "tool_calls",
+          content: [{ name: "search", args: { query: "bathroom" } }],
+        },
+      ];
 
       await client.generate(messages, [], "");
 
@@ -827,8 +827,8 @@ describe("GeminiClient", () => {
       const hasToolCall = body.contents.some((c: any) =>
         c.parts.some(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (p: any) => p.functionCall?.name === "search"
-        )
+          (p: any) => p.functionCall?.name === "search",
+        ),
       );
 
       expect(hasToolCall).toBe(true);
@@ -848,24 +848,24 @@ describe("GeminiClient", () => {
         json: async () => mockResponse,
       } as Response);
 
-       const messages: Message[] = [
-         { role: "user", type: "user_input", content: "Find bathrooms" },
-         {
-           role: "assistant",
-           type: "tool_calls",
-           content: [{ name: "search", args: { query: "bathroom" } }],
-         },
-         {
-           role: "user",
-           type: "tool_results",
-           content: [
-             {
-               name: "search",
-               result: [{ id: 1, name: "Restroom" }],
-             },
-           ],
-         },
-       ];
+      const messages: Message[] = [
+        { role: "user", type: "user_input", content: "Find bathrooms" },
+        {
+          role: "assistant",
+          type: "tool_calls",
+          content: [{ name: "search", args: { query: "bathroom" } }],
+        },
+        {
+          role: "user",
+          type: "tool_results",
+          content: [
+            {
+              name: "search",
+              result: [{ id: 1, name: "Restroom" }],
+            },
+          ],
+        },
+      ];
 
       await client.generate(messages, [], "");
 
@@ -877,8 +877,8 @@ describe("GeminiClient", () => {
       const hasToolResult = body.contents.some((c: any) =>
         c.parts.some(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (p: any) => p.functionResponse?.name === "search"
-        )
+          (p: any) => p.functionResponse?.name === "search",
+        ),
       );
 
       expect(hasToolResult).toBe(true);
@@ -926,14 +926,14 @@ describe("GeminiClient", () => {
 
       expect(fetchMock).toHaveBeenCalledWith(
         expect.stringContaining(
-          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
         ),
         expect.objectContaining({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-        })
+        }),
       );
     });
 
@@ -955,7 +955,7 @@ describe("GeminiClient", () => {
 
       expect(fetchMock).toHaveBeenCalledWith(
         expect.stringContaining("key=test-api-key"),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
   });
@@ -1036,11 +1036,11 @@ describe("GeminiClient", () => {
       } as Response);
 
       const largeText = "a".repeat(10000);
-       const messages: Message[] = [{ role: "user", type: "user_input", content: largeText }];
+      const messages: Message[] = [
+        { role: "user", type: "user_input", content: largeText },
+      ];
 
-      await expect(
-        client.generate(messages, [], "")
-      ).resolves.not.toThrow();
+      await expect(client.generate(messages, [], "")).resolves.not.toThrow();
     });
 
     it("should handle tool calls with null args", async () => {
@@ -1109,7 +1109,7 @@ describe("GeminiClient", () => {
 
         expect(response.toolCalls).toHaveLength(1);
         expect(response.toolCalls?.[0]?.thoughtSignature).toBe(
-          "encrypted-signature-token-abc123"
+          "encrypted-signature-token-abc123",
         );
       });
 
@@ -1182,7 +1182,9 @@ describe("GeminiClient", () => {
         const response = await client.generate([], [], "");
 
         expect(response.toolCalls).toHaveLength(2);
-        expect(response.toolCalls?.[0]?.thoughtSignature).toBe("first-call-signature");
+        expect(response.toolCalls?.[0]?.thoughtSignature).toBe(
+          "first-call-signature",
+        );
         expect(response.toolCalls?.[1]?.thoughtSignature).toBeUndefined();
       });
     });
@@ -1192,7 +1194,10 @@ describe("GeminiClient", () => {
         const mockResponse = {
           candidates: [
             {
-              content: { role: "model", parts: [{ text: "Here are the results" }] },
+              content: {
+                role: "model",
+                parts: [{ text: "Here are the results" }],
+              },
             },
           ],
         };
@@ -1232,11 +1237,13 @@ describe("GeminiClient", () => {
         // Find the tool call content
         const toolCallContent = body.contents.find(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (c: any) => c.parts.some((p: any) => p.functionCall)
+          (c: any) => c.parts.some((p: any) => p.functionCall),
         );
 
         expect(toolCallContent).toBeDefined();
-        expect(toolCallContent.parts[0].thoughtSignature).toBe("preserved-signature-xyz");
+        expect(toolCallContent.parts[0].thoughtSignature).toBe(
+          "preserved-signature-xyz",
+        );
       });
 
       it("should not include thoughtSignature field when absent from ToolCall", async () => {
@@ -1315,7 +1322,9 @@ describe("GeminiClient", () => {
         const response1 = await client.generate(messages1, [], "");
 
         // Verify extraction
-        expect(response1.toolCalls?.[0]?.thoughtSignature).toBe(originalSignature);
+        expect(response1.toolCalls?.[0]?.thoughtSignature).toBe(
+          originalSignature,
+        );
 
         // Step 2: Re-inject by including in next request
         const finalResponse = {
@@ -1346,7 +1355,9 @@ describe("GeminiClient", () => {
           {
             role: "user",
             type: "tool_results",
-            content: [{ name: "search", result: [{ id: 1, name: "Restroom" }] }],
+            content: [
+              { name: "search", result: [{ id: 1, name: "Restroom" }] },
+            ],
           },
         ];
 
@@ -1358,10 +1369,12 @@ describe("GeminiClient", () => {
 
         const toolCallContent = body.contents.find(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (c: any) => c.parts.some((p: any) => p.functionCall)
+          (c: any) => c.parts.some((p: any) => p.functionCall),
         );
 
-        expect(toolCallContent.parts[0].thoughtSignature).toBe(originalSignature);
+        expect(toolCallContent.parts[0].thoughtSignature).toBe(
+          originalSignature,
+        );
       });
     });
 
@@ -1387,7 +1400,11 @@ describe("GeminiClient", () => {
             role: "assistant",
             type: "tool_calls",
             content: [
-              { name: "search", args: { query: "coffee" }, thoughtSignature: "sig-turn-1" },
+              {
+                name: "search",
+                args: { query: "coffee" },
+                thoughtSignature: "sig-turn-1",
+              },
             ],
           },
           {
@@ -1395,13 +1412,25 @@ describe("GeminiClient", () => {
             type: "tool_results",
             content: [{ name: "search", result: [{ id: 1 }] }],
           },
-          { role: "assistant", type: "assistant_response", content: "Found some options" },
-          { role: "user", type: "user_input", content: "Get details on the first one" },
+          {
+            role: "assistant",
+            type: "assistant_response",
+            content: "Found some options",
+          },
+          {
+            role: "user",
+            type: "user_input",
+            content: "Get details on the first one",
+          },
           {
             role: "assistant",
             type: "tool_calls",
             content: [
-              { name: "getDetails", args: { poiId: 1 }, thoughtSignature: "sig-turn-2" },
+              {
+                name: "getDetails",
+                args: { poiId: 1 },
+                thoughtSignature: "sig-turn-2",
+              },
             ],
           },
           {
@@ -1420,12 +1449,16 @@ describe("GeminiClient", () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const toolCallContents = body.contents.filter((c: any) =>
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          c.parts.some((p: any) => p.functionCall)
+          c.parts.some((p: any) => p.functionCall),
         );
 
         expect(toolCallContents).toHaveLength(2);
-        expect(toolCallContents[0].parts[0].thoughtSignature).toBe("sig-turn-1");
-        expect(toolCallContents[1].parts[0].thoughtSignature).toBe("sig-turn-2");
+        expect(toolCallContents[0].parts[0].thoughtSignature).toBe(
+          "sig-turn-1",
+        );
+        expect(toolCallContents[1].parts[0].thoughtSignature).toBe(
+          "sig-turn-2",
+        );
       });
     });
 
@@ -1450,7 +1483,11 @@ describe("GeminiClient", () => {
             role: "assistant",
             type: "tool_calls",
             content: [
-              { name: "search", args: { query: "coffee" }, thoughtSignature: "parallel-sig" },
+              {
+                name: "search",
+                args: { query: "coffee" },
+                thoughtSignature: "parallel-sig",
+              },
               { name: "getDetails", args: { poiId: 1 } }, // No signature
             ],
           },

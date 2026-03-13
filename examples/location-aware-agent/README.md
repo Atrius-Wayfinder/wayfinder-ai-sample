@@ -67,7 +67,7 @@ VITE_ATRIUS_ACCOUNT_ID=<your-account-key>
 # AI Client Configuration
 # Get Gemini API key from https://aistudio.google.com/apikey
 VITE_AI_CLIENT_API_KEY=<your-gemini-api-key>
-VITE_AI_CLIENT_MODEL=gemini-2.0-flash
+VITE_AI_CLIENT_MODEL=gemini-2.5-flash
 
 # Optional: Adjust AI behavior (0.0 = deterministic, 1.0 = creative)
 VITE_AI_CLIENT_TEMPERATURE=0.7

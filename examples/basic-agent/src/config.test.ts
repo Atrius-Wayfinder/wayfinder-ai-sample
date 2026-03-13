@@ -24,7 +24,7 @@ describe("Config Store", () => {
         venueId: "test-venue",
         accountId: "test-account",
         apiKey: "test-key",
-        model: "gemini-2.0-flash",
+        model: "gemini-2.5-flash",
         temperature: 0.7,
       };
       localStorage.setItem("wayfinder-config", JSON.stringify(config));

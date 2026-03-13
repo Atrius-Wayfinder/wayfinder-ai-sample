@@ -22,51 +22,51 @@ The architecture uses a **provider-agnostic AI interface** (`IAIClient`), allowi
    yarn install
    ```
 
-2. **Set up environment variables**
-
-   ```bash
-   cd examples/basic-agent
-   cp .env.example .env.local
-   ```
-
-   Edit `.env.local` in this directory and add your credentials:
-   - `VITE_AI_CLIENT_API_KEY`: Your Google Gemini API key
-   - `VITE_ATRIUS_VENUE_ID`: Your Atrius Wayfinder venue ID
-   - `VITE_ATRIUS_ACCOUNT_ID`: Your Atrius Wayfinder account token/API key
-
-3. **Start the development server**
+2. **Start the development server**
 
    ```bash
    yarn workspace @examples/basic-agent dev
    ```
 
-4. **Open your browser**
-   Navigate to `http://localhost:5173`
+3. **Open your browser and configure**
+
+   Navigate to `http://localhost:5173`. On first visit, a setup form will prompt you for your credentials:
+   - **Venue ID**: Your Atrius Wayfinder venue ID
+   - **Account ID**: Your Atrius Wayfinder account token/API key
+   - **AI API Key**: Your Google Gemini API key
+   - **AI Model** _(optional)_: Defaults to `gemini-2.5-flash`
+   - **Temperature** _(optional)_: Controls response creativity (0.0 - 1.0, defaults to 0.7)
+
+   Settings are saved to `localStorage` and persist across sessions. No `.env` file is required.
 
 ---
 
 ## Configuration
 
-### Environment Variables
+### Runtime Configuration (Default)
 
-Create a `.env.local` file in this directory based on `.env.example`:
+The app uses a **runtime configuration form** instead of build-time environment variables. On first launch, a full-screen setup form collects your credentials and saves them to `localStorage`.
+
+To change settings later, click the **gear icon** in the chat drawer header. Saving new settings will reload the page to reinitialize the map SDK and AI client.
+
+To reset all configuration, clear `localStorage` for the site (or run `localStorage.removeItem("app-config")` in the browser console).
+
+### Environment Variables (Optional Fallback)
+
+If you prefer to use environment variables (e.g., for CI or automated testing), create a `.env.local` file in this directory based on `.env.example`. Environment variables are only used as fallbacks by the shared packages when no runtime config is provided.
 
 ```env
 # Atrius Wayfinder Venue Configuration
-# Get these from your Atrius Wayfinder administrator
 VITE_ATRIUS_VENUE_ID=<your-venue-id>
 VITE_ATRIUS_ACCOUNT_ID=<your-account-key>
 
 # AI Client Configuration
-# Get Gemini API key from https://aistudio.google.com/apikey
 VITE_AI_CLIENT_API_KEY=<your-gemini-api-key>
-VITE_AI_CLIENT_MODEL=gemini-2.0-flash
-
-# Optional: Adjust AI behavior (0.0 = deterministic, 1.0 = creative)
+VITE_AI_CLIENT_MODEL=gemini-2.5-flash
 VITE_AI_CLIENT_TEMPERATURE=0.7
 ```
 
-**Important:** Never commit `.env.local` to version control. Use `.env.example` as your template.
+**Important:** Never commit `.env.local` to version control.
 
 ---
 
@@ -158,8 +158,10 @@ This example follows a clean separation of concerns across the monorepo:
 
 ### **Example Layer** (This directory)
 
+- **ConfigForm**: Setup/settings form for entering credentials at runtime
+- **Config Store**: `localStorage`-backed config persistence (`config.ts`)
 - **Tools & Prompts**: Example-specific tool definitions and system instructions
-- **ChatDrawer**: Main chat interface with message history
+- **ChatDrawer**: Main chat interface with message history and settings access
 - **ChatMessage**: Renders AI responses with markdown support
 - **ChatInput**: User input with optional suggestions
 
@@ -204,6 +206,7 @@ Map updates via locusmaps-sdk
 
 ## Key Features
 
+- **Runtime Configuration**: In-browser setup form with `localStorage` persistence — no `.env` file or rebuild needed
 - **Real-time Chat Interface**: Responsive UI with message history and typing indicators
 - **AI-Powered Search**: Natural language queries mapped to venue locations
 - **Tool Execution**: Seamless integration with locusmaps-sdk capabilities
@@ -219,7 +222,7 @@ Map updates via locusmaps-sdk
 
 ### Customize System Instructions
 
-The AI's behavior is guided by system instructions in `src/prompts.ts`. You can customize the `BASE_SYSTEM_INSTRUCTION` to:
+The AI's behavior is guided by system instructions in `src/prompts.ts`. You can customize `getBaseSystemInstruction()` to:
 
 - Change the assistant's tone and personality
 - Add domain-specific knowledge or protocols

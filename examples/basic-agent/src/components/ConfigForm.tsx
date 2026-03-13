@@ -12,7 +12,7 @@ interface ConfigFormProps {
   onCancel?: () => void;
 }
 
-const DEFAULT_MODEL = "gemini-2.0-flash";
+const DEFAULT_MODEL = "gemini-2.5-flash";
 const DEFAULT_TEMPERATURE = 0.7;
 
 export function ConfigForm({
@@ -143,7 +143,7 @@ export function ConfigForm({
               type="text"
               value={model}
               onChange={(e) => setModel(e.target.value)}
-              placeholder="gemini-2.0-flash"
+              placeholder="gemini-2.5-flash"
             />
           </label>
 
