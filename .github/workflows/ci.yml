@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    name: Test, Typecheck, Lint, Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Test
+        run: yarn test
+
+      - name: Typecheck
+        run: yarn check-types
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Build basic-agent
+        run: yarn workspace @examples/basic-agent build
+
+      - name: Build location-aware-agent
+        run: yarn workspace @examples/location-aware-agent build
+
+  deploy-basic-agent:
+    name: Deploy Basic Agent
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/deploy-basic-agent.yml
+    secrets: inherit
