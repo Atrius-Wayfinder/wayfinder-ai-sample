@@ -43,30 +43,13 @@ The architecture uses a **provider-agnostic AI interface** (`IAIClient`), allowi
 
 ## Configuration
 
-### Runtime Configuration (Default)
+### Runtime Configuration
 
 The app uses a **runtime configuration form** instead of build-time environment variables. On first launch, a full-screen setup form collects your credentials and saves them to `localStorage`.
 
 To change settings later, click the **gear icon** in the chat drawer header. Saving new settings will reload the page to reinitialize the map SDK and AI client.
 
 To reset all configuration, clear `localStorage` for the site (or run `localStorage.removeItem("app-config")` in the browser console).
-
-### Environment Variables (Optional Fallback)
-
-If you prefer to use environment variables (e.g., for CI or automated testing), create a `.env.local` file in this directory based on `.env.example`. Environment variables are only used as fallbacks by the shared packages when no runtime config is provided.
-
-```env
-# Atrius Wayfinder Venue Configuration
-VITE_ATRIUS_VENUE_ID=<your-venue-id>
-VITE_ATRIUS_ACCOUNT_ID=<your-account-key>
-
-# AI Client Configuration
-VITE_AI_CLIENT_API_KEY=<your-gemini-api-key>
-VITE_AI_CLIENT_MODEL=gemini-2.5-flash
-VITE_AI_CLIENT_TEMPERATURE=0.7
-```
-
-**Important:** Never commit `.env.local` to version control.
 
 ---
 
