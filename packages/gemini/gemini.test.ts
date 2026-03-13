@@ -26,64 +26,44 @@ describe("GeminiClient", () => {
   let fetchMock: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    // Setup environment variables
-    vi.stubEnv("VITE_AI_CLIENT_API_KEY", "test-api-key");
-    vi.stubEnv("VITE_AI_CLIENT_MODEL", "gemini-2.5-flash");
-    vi.stubEnv("VITE_AI_CLIENT_TEMPERATURE", "0.7");
-
     // Mock fetch globally
     fetchMock = vi.fn();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     globalThis.fetch = fetchMock as any;
 
-    // Create client
-    client = new GeminiClient();
+    // Create client with explicit config (no env var fallbacks)
+    client = new GeminiClient({
+      apiKey: "test-api-key",
+      model: "gemini-2.5-flash",
+      temperature: 0.7,
+    });
   });
 
   afterEach(() => {
-    vi.unstubAllEnvs();
     vi.restoreAllMocks();
   });
 
   describe("Initialization & Configuration", () => {
-    it("should read API key from environment variable", () => {
-      // The client should initialize without errors when API key is present
+    it("should initialize successfully with explicit config", () => {
       expect(client).toBeDefined();
     });
 
-    it("should use default model when not specified", () => {
-      vi.stubGlobal("import", {
-        meta: {
-          env: {
-            VITE_AI_CLIENT_API_KEY: "test-key",
-            VITE_AI_CLIENT_MODEL: undefined,
-            VITE_AI_CLIENT_TEMPERATURE: "0.5",
-          },
-        },
-      });
-
-      const newClient = new GeminiClient();
+    it("should use default model when not specified in config", () => {
+      const newClient = new GeminiClient({ apiKey: "test-key" });
       expect(newClient).toBeDefined();
     });
 
-    it("should use default temperature when not specified", () => {
-      vi.stubGlobal("import", {
-        meta: {
-          env: {
-            VITE_AI_CLIENT_API_KEY: "test-key",
-            VITE_AI_CLIENT_MODEL: "gemini-2.5-flash",
-            VITE_AI_CLIENT_TEMPERATURE: undefined,
-          },
-        },
+    it("should use default temperature when not specified in config", () => {
+      const newClient = new GeminiClient({
+        apiKey: "test-key",
+        model: "gemini-2.5-flash",
       });
-
-      const newClient = new GeminiClient();
       expect(newClient).toBeDefined();
     });
   });
 
   describe("Constructor Config Override", () => {
-    it("should use provided apiKey over environment variable", async () => {
+    it("should use provided apiKey", async () => {
       const customClient = new GeminiClient({
         apiKey: "custom-api-key",
       });
@@ -109,7 +89,7 @@ describe("GeminiClient", () => {
       );
     });
 
-    it("should use provided model over environment variable", async () => {
+    it("should use provided model", async () => {
       const customClient = new GeminiClient({
         apiKey: "test-key",
         model: "gemini-pro",
@@ -136,7 +116,7 @@ describe("GeminiClient", () => {
       );
     });
 
-    it("should use provided temperature over environment variable", async () => {
+    it("should use provided temperature", async () => {
       const customClient = new GeminiClient({
         apiKey: "test-key",
         temperature: 0.3,
@@ -162,7 +142,7 @@ describe("GeminiClient", () => {
       expect(body.generationConfig.temperature).toBe(0.3);
     });
 
-    it("should fall back to env vars when no config provided (backward compat)", () => {
+    it("should use defaults when no config provided", () => {
       const defaultClient = new GeminiClient();
       expect(defaultClient).toBeDefined();
     });

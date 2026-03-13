@@ -4,9 +4,9 @@
  * This module contains system instructions that guide the AI agent's behavior,
  * including role definition, operational protocols, and tool usage guidelines.
  *
- * CUSTOMIZATION: The BASE_SYSTEM_INSTRUCTION below
+ * CUSTOMIZATION: The getBaseSystemInstruction function below
  * demonstrates detailed prompt engineering best practices. To use this
- * sample with your venue, replace BASE_SYSTEM_INSTRUCTION with instructions
+ * sample with your venue, replace it with instructions
  * appropriate for your use case. The structure shown here (role, protocols,
  * constraints, tool descriptions) is a good template for effective AI assistant
  * behavior in venue navigation contexts.
@@ -15,7 +15,7 @@
 import { getPinnedLocation } from "@core/wayfinder";
 
 /**
- * Base system instruction for the AI agent.
+ * Returns the base system instruction for the AI agent, parameterized by venueId.
  *
  * This prompt defines the agent's role, available tools, and protocols for handling
  * different user request types. It is sent to the AI provider on every request.
@@ -24,7 +24,8 @@ import { getPinnedLocation } from "@core/wayfinder";
  * based on your venue type and business requirements.
  * The level of detail shown here helps the AI maintain consistent, useful behavior.
  */
-const BASE_SYSTEM_INSTRUCTION = `Role: You are the [${import.meta.env.VITE_ATRIUS_VENUE_ID}] Airport Assistant. Your goal is to provide warm, confident, and efficient navigation help.
+function getBaseSystemInstruction(venueId: string): string {
+  return `Role: You are the [${venueId}] Airport Assistant. Your goal is to provide warm, confident, and efficient navigation help.
 
 IMPORTANT:
     Data Masking: POI IDs (e.g., "135") are for tool-use only. They are strictly invisible to the user.
@@ -60,6 +61,7 @@ Scope & Limits:
     Hand-off: If out-of-scope, provide directions to the nearest relevant service desk (e.g., "I can't check flight times, but the Information Desk on Level 2 is right nearby to help!").
 
 Contextual Proactivity: Don't wait for users to be specific. If a query is vague, use searchNearby to find options close to the user first.`;
+}
 
 /**
  * Build location context string from the pinned location.
@@ -104,15 +106,20 @@ export const MAX_ITERATIONS = 10;
  * - Iteration 10: Explicit "no iterations left" message when tools are unavailable
  *
  * @param {number} iteration - Current iteration number (1-indexed)
+ * @param {string} venueId - The venue identifier for the system prompt
  * @returns {string} The system instruction with optional iteration guidance
  */
-export function buildSystemInstruction(iteration: number): string {
+export function buildSystemInstruction(
+  iteration: number,
+  venueId: string,
+): string {
+  const baseInstruction = getBaseSystemInstruction(venueId);
   const locationContext = buildLocationContext();
 
   if (iteration >= MAX_ITERATIONS) {
     // Iteration 10: Hard stop - no tools available
     return (
-      BASE_SYSTEM_INSTRUCTION +
+      baseInstruction +
       locationContext +
       `\n\nYou have no iterations left. Provide your final answer based on information already gathered, or ask clarifying questions to help refine future searches.`
     );
@@ -121,11 +128,11 @@ export function buildSystemInstruction(iteration: number): string {
   if (iteration + 2 >= MAX_ITERATIONS) {
     // Iterations 8-9: Warn to prioritize
     return (
-      BASE_SYSTEM_INSTRUCTION +
+      baseInstruction +
       locationContext +
       TOOLS_INSTRUCTIONS +
       `\n\nNote: You have ${MAX_ITERATIONS - iteration} iteration(s) remaining. Prioritize gathering the most critical information and prepare to wrap up soon.`
     );
   }
-  return BASE_SYSTEM_INSTRUCTION + locationContext + TOOLS_INSTRUCTIONS;
+  return baseInstruction + locationContext + TOOLS_INSTRUCTIONS;
 }

@@ -134,11 +134,9 @@ class AtriusMap {
 const getMapInstance = (config: Partial<Static<typeof Config>> = {}) => {
   const pinnedLocation = getPinnedLocation();
   return AtriusMap.getInstance("#map", {
-    venueId: import.meta.env.VITE_ATRIUS_VENUE_ID,
-    accountId: import.meta.env.VITE_ATRIUS_ACCOUNT_ID,
     pinnedLocation: pinnedLocation ?? undefined,
     ...config,
-  });
+  } as Static<typeof Config>);
 };
 
 export default getMapInstance;

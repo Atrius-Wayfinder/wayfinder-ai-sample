@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import type { FormEvent } from "react";
-import type { AppConfig } from "../config";
+import type { AppConfig } from "./config";
 import styles from "./ConfigForm.module.css";
 
 interface ConfigFormProps {

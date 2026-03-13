@@ -12,7 +12,7 @@ import { GeminiClient } from "@core/gemini";
 import tools from "@core/agent-tools";
 import { search, showDirections } from "../tools";
 import { buildSystemInstruction, MAX_ITERATIONS } from "../prompts";
-import type { AppConfig } from "../config";
+import type { AppConfig } from "@core/config";
 import styles from "./ChatDrawer.module.css";
 
 interface ChatDrawerProps {

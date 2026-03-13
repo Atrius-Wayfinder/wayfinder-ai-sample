@@ -112,22 +112,13 @@ export class GeminiClient implements IAIClient {
   private temperature: number;
 
   constructor(config?: GeminiClientConfig) {
-    this.apiKey =
-      config?.apiKey ??
-      (import.meta.env.VITE_AI_CLIENT_API_KEY as string | undefined) ??
-      "";
-    this.model =
-      config?.model ??
-      (import.meta.env.VITE_AI_CLIENT_MODEL as string | undefined) ??
-      DEFAULT_MODEL;
-    this.temperature =
-      config?.temperature ??
-      parseFloat(import.meta.env.VITE_AI_CLIENT_TEMPERATURE as string) ??
-      0.7;
+    this.apiKey = config?.apiKey ?? "";
+    this.model = config?.model ?? DEFAULT_MODEL;
+    this.temperature = config?.temperature ?? 0.7;
 
     if (!this.apiKey) {
       console.warn(
-        "AI client API key not configured. Set VITE_AI_CLIENT_API_KEY in your .env file or pass { apiKey } to the GeminiClient constructor.",
+        "AI client API key not configured. Pass { apiKey } to the GeminiClient constructor.",
       );
     }
   }

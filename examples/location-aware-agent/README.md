@@ -32,10 +32,7 @@ The architecture uses the same **provider-agnostic AI interface** (`IAIClient`) 
    cp .env.example .env.local
    ```
 
-   Edit `.env.local` in this directory and add your credentials:
-   - `VITE_AI_CLIENT_API_KEY`: Your Google Gemini API key
-   - `VITE_ATRIUS_VENUE_ID`: Your Atrius Wayfinder venue ID
-   - `VITE_ATRIUS_ACCOUNT_ID`: Your Atrius Wayfinder account token/API key
+   Edit `.env.local` in this directory and add your pinned location:
    - `VITE_PINNED_LATITUDE`: Kiosk latitude coordinate
    - `VITE_PINNED_LONGITUDE`: Kiosk longitude coordinate
    - `VITE_PINNED_FLOOR_ID`: Floor ID where the kiosk is located
@@ -54,24 +51,19 @@ The architecture uses the same **provider-agnostic AI interface** (`IAIClient`) 
 
 ## Configuration
 
+### Runtime Configuration
+
+The app uses a **runtime configuration form** instead of build-time environment variables. On first launch, a full-screen setup form collects your credentials and saves them to `localStorage`.
+
+To change settings later, click the **gear icon** in the chat drawer header. Saving new settings will reload the page to reinitialize the map SDK and AI client.
+
+To reset all configuration, clear `localStorage` for the site (or run `localStorage.removeItem("app-config")` in the browser console).
+
 ### Environment Variables
 
 Create a `.env.local` file in this directory based on `.env.example`:
 
 ```env
-# Atrius Wayfinder Venue Configuration
-# Get these from your Atrius Wayfinder administrator
-VITE_ATRIUS_VENUE_ID=<your-venue-id>
-VITE_ATRIUS_ACCOUNT_ID=<your-account-key>
-
-# AI Client Configuration
-# Get Gemini API key from https://aistudio.google.com/apikey
-VITE_AI_CLIENT_API_KEY=<your-gemini-api-key>
-VITE_AI_CLIENT_MODEL=gemini-2.5-flash
-
-# Optional: Adjust AI behavior (0.0 = deterministic, 1.0 = creative)
-VITE_AI_CLIENT_TEMPERATURE=0.7
-
 # Kiosk Position (required)
 # Static physical location of the kiosk in the venue.
 # The app uses this as the origin for directions and the center point for nearby search.

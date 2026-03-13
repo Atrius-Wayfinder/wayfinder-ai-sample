@@ -288,6 +288,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@core/config@workspace:*, @core/config@workspace:packages/config":
+  version: 0.0.0-use.local
+  resolution: "@core/config@workspace:packages/config"
+  peerDependencies:
+    react: ^19.0.0
+  languageName: unknown
+  linkType: soft
+
 "@core/gemini@workspace:*, @core/gemini@workspace:packages/gemini":
   version: 0.0.0-use.local
   resolution: "@core/gemini@workspace:packages/gemini"
@@ -631,6 +639,7 @@ __metadata:
     "@core/agent": "workspace:*"
     "@core/agent-tools": "workspace:*"
     "@core/chat-ui": "workspace:*"
+    "@core/config": "workspace:*"
     "@core/gemini": "workspace:*"
     "@core/logger": "workspace:*"
     "@core/wayfinder": "workspace:*"
@@ -652,6 +661,7 @@ __metadata:
     "@core/agent": "workspace:*"
     "@core/agent-tools": "workspace:*"
     "@core/chat-ui": "workspace:*"
+    "@core/config": "workspace:*"
     "@core/gemini": "workspace:*"
     "@core/logger": "workspace:*"
     "@core/wayfinder": "workspace:*"

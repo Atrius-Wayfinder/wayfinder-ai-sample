@@ -13,6 +13,7 @@
     "@core/agent": "workspace:*",
     "@core/agent-tools": "workspace:*",
     "@core/chat-ui": "workspace:*",
+    "@core/config": "workspace:*",
     "@core/gemini": "workspace:*",
     "@core/logger": "workspace:*",
     "@core/wayfinder": "workspace:*",

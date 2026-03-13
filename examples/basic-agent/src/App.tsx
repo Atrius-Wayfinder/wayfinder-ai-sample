@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import "./App.css";
 import getMapInstance from "@core/wayfinder";
-import { getConfig, saveConfig, type AppConfig } from "./config";
-import { ConfigForm } from "./components/ConfigForm";
+import { getConfig, saveConfig, ConfigForm, type AppConfig } from "@core/config";
 import { ChatDrawer } from "./components/ChatDrawer";
 
 function App() {

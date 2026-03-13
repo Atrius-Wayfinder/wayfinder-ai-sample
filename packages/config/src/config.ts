@@ -12,15 +12,15 @@ const STORAGE_KEY = "wayfinder-config";
  * Application configuration that was previously sourced from environment variables.
  */
 export interface AppConfig {
-  /** Atrius Wayfinder Venue ID (was VITE_ATRIUS_VENUE_ID) */
+  /** Atrius Wayfinder Venue ID */
   venueId: string;
-  /** Atrius Wayfinder Account ID (was VITE_ATRIUS_ACCOUNT_ID) */
+  /** Atrius Wayfinder Account ID */
   accountId: string;
-  /** Gemini API Key (was VITE_AI_CLIENT_API_KEY) */
+  /** Gemini API Key */
   apiKey: string;
-  /** Gemini model name (was VITE_AI_CLIENT_MODEL) */
+  /** Gemini model name */
   model: string;
-  /** AI temperature 0.0-1.0 (was VITE_AI_CLIENT_TEMPERATURE) */
+  /** AI temperature 0.0-1.0 */
   temperature: number;
 }
 

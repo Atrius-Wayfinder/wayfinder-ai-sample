@@ -10,7 +10,7 @@ This repository is provided _as-is_ and is for educational and integration refer
 
 **THESE SAMPLES SHOULD NOT BE DEPLOYED AS PUBLIC WEBAPPS AS-IS.**
 
-These samples expose AI provider API keys in client-side code, which is a significant security risk. In a production environment, you **must**:
+These samples require the user to input an AI provider API key in a form, which is then stored in `localStorage`. This is a significant security risk. In a production environment, you **must**:
 
 1. **Create a backend service** to proxy requests to the LLM (e.g., Node.js, Python, Go)
 2. **Store API keys** securely on the server (environment variables, secrets management)
